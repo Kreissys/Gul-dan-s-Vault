@@ -1,83 +1,143 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
+<div class="max-w-7xl mx-auto slide-in">
     <div class="mb-6">
-        <a href="{{ route('games.index') }}" class="text-blue-500 hover:underline mb-4 inline-block">&larr; Volver a mi biblioteca</a>
-        <h1 class="text-3xl font-bold text-gray-900">{{ $game->title }}</h1>
+        <a href="{{ route('games.index') }}" class="text-green-400 hover:text-green-300 mb-4 inline-flex items-center gap-2 transition-colors duration-300">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Volver a mi biblioteca
+        </a>
+        <h1 class="text-3xl font-bold text-slate-100 brand-font">{{ $game->title }}</h1>
     </div>
 
     {{-- Mensajes de éxito/error --}}
     @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
+        <div class="bg-green-500/20 border border-green-500/50 text-green-400 px-4 py-3 rounded-lg mb-6 backdrop-blur-sm">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {{ session('success') }}
+            </div>
         </div>
     @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {{-- Imagen y información básica --}}
         <div class="lg:col-span-1">
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="card-glass overflow-hidden">
                 @if($game->image)
-                    <img src="{{ $game->image }}" alt="{{ $game->title }}" class="w-full h-64 object-cover">
+                    <div class="relative">
+                        <img src="{{ $game->image }}" alt="{{ $game->title }}" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    </div>
                 @else
-                    <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-500">Sin imagen</span>
+                    <div class="w-full h-64 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-slate-400">Sin imagen</span>
+                        </div>
                     </div>
                 @endif
                 
-                <div class="p-4">
+                <div class="p-6">
                     <div class="mb-4">
-                        <span class="px-3 py-1 rounded-full text-sm text-white {{ $game->status_color }}">
+                        <span class="status-badge px-4 py-2 rounded-full text-sm font-medium text-white {{ $game->status_color }}">
                             {{ $game->status_text }}
                         </span>
                     </div>
                     
                     @if($game->rating)
-                        <div class="mb-3">
-                            <span class="text-sm text-gray-600">Tu puntuación:</span>
+                        <div class="mb-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                            <span class="text-sm text-slate-400 block mb-1">Tu puntuación:</span>
                             <div class="flex items-center">
-                                <span class="text-yellow-500 text-lg">★</span>
-                                <span class="ml-1 text-lg font-semibold">{{ $game->rating }}/10</span>
+                                <span class="text-yellow-400 text-xl mr-2">★</span>
+                                <span class="text-xl font-bold text-slate-100">{{ $game->rating }}/10</span>
                             </div>
                         </div>
                     @endif
                     
-                    <div class="space-y-2 text-sm">
+                    <div class="space-y-3 text-sm">
                         @if($game->release_date)
-                            <p><strong>Lanzamiento:</strong> {{ $game->release_date->format('Y') }}</p>
+                            <div class="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <div>
+                                    <span class="text-slate-400">Lanzamiento:</span>
+                                    <span class="text-slate-100 font-medium ml-2">{{ $game->release_date->format('Y') }}</span>
+                                </div>
+                            </div>
                         @endif
                         
                         @if($game->hours_played > 0)
-                            <p><strong>Horas jugadas:</strong> {{ $game->hours_played }}</p>
+                            <div class="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <span class="text-slate-400">Horas jugadas:</span>
+                                    <span class="text-slate-100 font-medium ml-2">{{ $game->hours_played }}</span>
+                                </div>
+                            </div>
                         @endif
                         
                         @if($game->playtime > 0)
-                            <p><strong>Duración estimada:</strong> {{ $game->playtime }} horas</p>
+                            <div class="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                <div>
+                                    <span class="text-slate-400">Duración estimada:</span>
+                                    <span class="text-slate-100 font-medium ml-2">{{ $game->playtime }} horas</span>
+                                </div>
+                            </div>
                         @endif
                         
                         @if($game->metacritic_score)
-                            <p><strong>Metacritic:</strong> {{ $game->metacritic_score }}/100</p>
+                            <div class="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                                <div class="w-6 h-6 bg-yellow-500 text-black text-xs font-bold rounded flex items-center justify-center">
+                                    M
+                                </div>
+                                <div>
+                                    <span class="text-slate-400">Metacritic:</span>
+                                    <span class="text-slate-100 font-medium ml-2">{{ $game->metacritic_score }}/100</span>
+                                </div>
+                            </div>
                         @endif
                     </div>
                     
                     @if($game->genres)
-                        <div class="mt-4">
-                            <p class="text-sm font-medium text-gray-700 mb-2">Géneros:</p>
-                            <div class="flex flex-wrap gap-1">
+                        <div class="mt-6">
+                            <p class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-purple-400 rounded-full"></span>
+                                Géneros:
+                            </p>
+                            <div class="flex flex-wrap gap-2">
                                 @foreach($game->genres as $genre)
-                                    <span class="px-2 py-1 bg-gray-100 text-xs rounded">{{ $genre }}</span>
+                                    <span class="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-green-500/20 text-slate-300 text-xs rounded-full border border-purple-500/30">
+                                        {{ $genre }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>
                     @endif
                     
                     @if($game->platforms)
-                        <div class="mt-4">
-                            <p class="text-sm font-medium text-gray-700 mb-2">Plataformas:</p>
-                            <div class="flex flex-wrap gap-1">
+                        <div class="mt-6">
+                            <p class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+                                Plataformas:
+                            </p>
+                            <div class="flex flex-wrap gap-2">
                                 @foreach($game->platforms as $platform)
-                                    <span class="px-2 py-1 bg-blue-100 text-xs rounded">{{ $platform }}</span>
+                                    <span class="px-3 py-1 bg-slate-700/50 text-slate-300 text-xs rounded-full border border-slate-600">
+                                        {{ $platform }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>
@@ -88,17 +148,20 @@
 
         {{-- Formulario de edición y notas --}}
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-bold mb-4">Actualizar información</h2>
+            <div class="card-glass p-6">
+                <h2 class="text-xl font-bold text-slate-100 mb-6 flex items-center gap-3">
+                    <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                    Actualizar información
+                </h2>
                 
-                <form method="POST" action="{{ route('games.update', $game) }}">
+                <form method="POST" action="{{ route('games.update', $game) }}" class="space-y-6">
                     @csrf
                     @method('PUT')
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                            <select name="status" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Estado</label>
+                            <select name="status" required class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                                 <option value="pendiente" {{ $game->status === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                                 <option value="jugando" {{ $game->status === 'jugando' ? 'selected' : '' }}>Jugando</option>
                                 <option value="completado" {{ $game->status === 'completado' ? 'selected' : '' }}>Completado</option>
@@ -107,8 +170,8 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Puntuación</label>
-                            <select name="rating" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Puntuación</label>
+                            <select name="rating" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                                 <option value="">Sin puntuación</option>
                                 @for($i = 1; $i <= 10; $i++)
                                     <option value="{{ $i }}" {{ $game->rating == $i ? 'selected' : '' }}>{{ $i }}/10</option>
@@ -117,31 +180,37 @@
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Horas jugadas</label>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Horas jugadas</label>
                         <input type="number" 
                                name="hours_played" 
                                value="{{ $game->hours_played }}" 
                                min="0" 
                                step="0.5"
-                               class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                               class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                     </div>
                     
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Notas personales</label>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Notas personales</label>
                         <textarea name="notes" 
                                   rows="4" 
                                   placeholder="Escribe tus notas sobre este juego..."
-                                  class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ $game->notes }}</textarea>
+                                  class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none">{{ $game->notes }}</textarea>
                     </div>
                     
-                    <div class="flex gap-3">
-                        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 focus:ring-2 focus:ring-blue-500">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="btn-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
                             Actualizar
                         </button>
                         
                         <a href="{{ route('rawg.show', ['slug' => $game->rawg_slug]) }}" 
-                           class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 focus:ring-2 focus:ring-gray-500">
+                           class="bg-slate-700 hover:bg-slate-600 text-slate-100 px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-300 border border-slate-600 hover:border-slate-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
                             Ver en RAWG
                         </a>
                     </div>
@@ -150,10 +219,13 @@
             
             {{-- Notas del usuario --}}
             @if($game->notes)
-                <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-                    <h3 class="text-lg font-bold mb-3">Mis notas</h3>
-                    <div class="prose max-w-none">
-                        <p class="text-gray-700 whitespace-pre-line">{{ $game->notes }}</p>
+                <div class="card-glass p-6 mt-6">
+                    <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-3">
+                        <span class="w-2 h-2 bg-orange-400 rounded-full"></span>
+                        Mis notas
+                    </h3>
+                    <div class="bg-slate-700/30 rounded-lg p-4 border border-slate-600">
+                        <p class="text-slate-300 whitespace-pre-line leading-relaxed">{{ $game->notes }}</p>
                     </div>
                 </div>
             @endif
@@ -167,7 +239,10 @@
             @method('DELETE')
             <button type="submit" 
                     onclick="return confirm('¿Estás seguro de eliminar este juego de tu biblioteca? Esta acción no se puede deshacer.')"
-                    class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 focus:ring-2 focus:ring-red-500">
+                    class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/50 hover:border-red-400 px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 mx-auto">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
                 Eliminar de mi biblioteca
             </button>
         </form>
