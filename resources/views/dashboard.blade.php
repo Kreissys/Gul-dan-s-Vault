@@ -7,6 +7,85 @@
         <p class="text-slate-400">Gestiona tu biblioteca personal de videojuegos</p>
     </div>
 
+    {{-- Juegos recomendados --}}
+    @php
+        $recommendations = (new \App\Http\Controllers\GameRecommendationController())->getRecommendations(Auth::user());
+    @endphp
+
+    <div class="card-glass p-6 slide-in mb-8">
+        <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center">
+            <span class="w-2 h-2 bg-orange-400 rounded-full mr-3"></span>
+            Juegos recomendados
+        </h3>
+        
+        @if(empty($recommendations))
+            <p class="text-slate-400 text-center">No se encontraron juegos recomendados en este momento</p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach($recommendations as $game)
+                    <div class="card-glass overflow-hidden hover:scale-105 transition-all duration-300 group slide-in">
+                        <a href="{{ route('rawg.show', ['slug' => $game['slug']]) }}" class="block">
+                            <div class="relative overflow-hidden">
+                                @if($game['background_image'])
+                                    <img src="{{ $game['background_image'] }}" alt="{{ $game['name'] }}" 
+                                         class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                @else
+                                    <div class="w-full h-48 bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center group-hover:from-slate-500 group-hover:to-slate-600 transition-colors duration-300">
+                                        <span class="text-slate-400">Sin imagen</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
+                        <div class="p-4">
+                            <a href="{{ route('rawg.show', ['slug' => $game['slug']]) }}" class="block">
+                                <h4 class="text-lg font-medium text-slate-100 mb-2 hover:text-green-400 transition-colors">{{ $game['name'] }}</h4>
+                            </a>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="flex items-center gap-2">
+                                        @foreach($game['genres'] as $genre)
+                                            <span class="text-sm text-slate-400">{{ $genre }}</span>
+                                        @endforeach
+                                    </div>
+                                    @if($game['metacritic'])
+                                        <span class="ml-2 px-2 py-1 text-xs bg-orange-500/20 text-orange-400 rounded-full">
+                                            {{ $game['metacritic'] }}
+                                        </span>
+                                    @endif
+                                    @if($game['rating'])
+                                        <span class="ml-2 px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full">
+                                            {{ number_format($game['rating'], 1) }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="flex items-center">
+                                    @if($game['released'])
+                                        <span class="text-sm text-slate-400">{{ \Carbon\Carbon::parse($game['released'])->format('Y') }}</span>
+                                    @endif
+                                    <form action="{{ route('games.store') }}" method="POST" class="inline ml-2">
+                                        @csrf
+                                        <input type="hidden" name="rawg_id" value="{{ $game['id'] }}">
+                                        <input type="hidden" name="rawg_slug" value="{{ $game['slug'] }}">
+                                        <input type="hidden" name="status" value="pendiente">
+                                        <button type="submit" 
+                                                class="p-2 rounded-lg hover:bg-slate-700 transition-colors"
+                                                title="Agregar a mi biblioteca">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
     {{-- Estadísticas rápidas --}}
     @php
         $totalGames = App\Models\Game::where('user_id', Auth::id())->count();
