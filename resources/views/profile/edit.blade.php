@@ -65,15 +65,81 @@
                         @endif
                     </div>
 
+                    <div class="mb-4">
+                        <label for="current_password" class="block text-sm font-medium text-slate-300 mb-2">Contraseña Actual</label>
+                        <input id="current_password" name="current_password" type="password" 
+                               autocomplete="current-password"
+                               class="w-full px-3 py-3 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                        @error('current_password')
+                            <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <div class="flex items-center gap-4">
-                        <button type="submit" class="btn-primary text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            Guardar cambios
+                        <button type="submit" class="px-6 py-3 bg-green-500 hover:bg-green-400 text-white rounded-lg transition-colors">
+                            Guardar Cambios
                         </button>
+                        @if (session('status') === 'profile-updated')
+                            <button type="button" class="px-6 py-3 bg-gray-500 hover:bg-gray-400 text-white rounded-lg transition-colors">
+                                Cerrar
+                            </button>
+                        @endif
                     </div>
                 </form>
+            </div>
+
+            {{-- Sección de foto de perfil --}}
+            <div class="card-glass p-6 mb-6 slide-in">
+                <h2 class="text-xl font-bold text-slate-100 mb-4 flex items-center">
+                    <span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
+                    Foto de Perfil
+                </h2>
+
+                <div class="space-y-6">
+                    <!-- Foto actual -->
+                    <div class="flex items-center justify-center">
+                        <div class="relative w-40 h-40 rounded-full overflow-hidden border-2 border-slate-700">
+                            <img src="{{ $user->profile_photo_url }}" 
+                                 alt="{{ $user->name }}" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="flex flex-col gap-4">
+                        <!-- Botón cambiar foto -->
+                        <button type="button" 
+                                onclick="document.getElementById('photo').click()"
+                                class="px-6 py-3 bg-blue-500 hover:bg-blue-400 text-white rounded-lg transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Cambiar Foto
+                        </button>
+                        
+                        <!-- Formulario de subir foto -->
+                        <form action="{{ route('profile-photo.update') }}" method="POST" enctype="multipart/form-data" class="hidden">
+                            @csrf
+                            <input type="file" name="photo" id="photo" 
+                                   accept="image/*"
+                                   onchange="this.form.submit()">
+                        </form>
+
+                        <!-- Botón eliminar -->
+                        @if ($user->profile_photo)
+                            <form action="{{ route('profile-photo.destroy') }}" method="POST" class="flex justify-center">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-6 py-3 bg-red-500 hover:bg-red-400 text-white rounded-lg transition-colors flex items-center justify-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Eliminar Foto
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
             </div>
 
             {{-- Estadísticas rápidas --}}

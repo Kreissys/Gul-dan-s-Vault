@@ -123,8 +123,10 @@
                         <!-- Logo -->
                         <div class="flex-shrink-0 flex items-center">
                             <a href="{{ route('dashboard') }}" class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-purple-600 rounded-lg flex items-center justify-center">
-                                    <span class="text-xl font-bold text-white">🏛️</span>
+                                <div class="w-10 h-10 flex items-center justify-center">
+                                    <img src="{{ asset('img/logo.png') }}" 
+                                         alt="Gul'dan Vault's Logo" 
+                                         class="w-full h-full object-contain">
                                 </div>
                                 <span class="brand-font text-xl font-bold bg-gradient-to-r from-green-400 to-purple-400 bg-clip-text text-transparent">
                                     Gul'dan Vault's
@@ -167,8 +169,16 @@
                             <!-- User Dropdown -->
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open" class="flex items-center space-x-2 text-slate-300 hover:text-green-400 transition-colors">
-                                    <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-purple-600 rounded-full flex items-center justify-center">
-                                        <span class="text-xs font-bold text-white">{{ substr(Auth::user()->name, 0, 2) }}</span>
+                                    <div class="w-8 h-8 rounded-full overflow-hidden">
+                                        @if(Auth::user()->profile_photo)
+                                            <img src="{{ Auth::user()->profile_photo_url }}" 
+                                                 alt="{{ Auth::user()->name }}" 
+                                                 class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full bg-gradient-to-br from-green-400 to-purple-600 flex items-center justify-center">
+                                                <span class="text-xs font-bold text-white">{{ substr(Auth::user()->name, 0, 2) }}</span>
+                                            </div>
+                                        @endif
                                     </div>
                                     <span class="hidden md:block">{{ Auth::user()->name }}</span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

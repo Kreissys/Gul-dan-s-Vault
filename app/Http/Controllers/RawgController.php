@@ -18,17 +18,36 @@ class RawgController extends Controller
 
     public function search(Request $request)
     {
+        // Obtener parámetros de filtro
         $query = $request->input('q');
-
-        if (!$query) {
+        $metacritic = $request->input('metacritic');
+        $year = $request->input('year');
+        $genres = $request->input('genres');
+        
+        // Si no hay búsqueda de texto pero hay algún filtro, proceder
+        if (!$query && (!$metacritic && !$year && !$genres)) {
             return view('rawg-search');
         }
 
-        $response = Http::get('https://api.rawg.io/api/games', [
+        // Construir parámetros para la API
+        $params = [
             'key' => $this->apiKey,
             'search' => $query,
             'page_size' => 10,
-        ]);
+        ];
+
+        // Agregar filtros solo si están presentes
+        if ($metacritic) {
+            $params['metacritic'] = $metacritic;
+        }
+        if ($year) {
+            $params['dates'] = $year . '-01-01,' . $year . '-12-31';
+        }
+        if ($genres) {
+            $params['genres'] = $genres;
+        }
+
+        $response = Http::get('https://api.rawg.io/api/games', $params);
 
         if ($response->failed()) {
             return back()->withErrors('Error al obtener datos de la API de RAWG.');
@@ -48,7 +67,13 @@ class RawgController extends Controller
             }
         }
 
-        return view('rawg-search', ['results' => $results, 'query' => $query]);
+        return view('rawg-search', [
+            'results' => $results,
+            'query' => $query,
+            'metacritic' => $metacritic,
+            'year' => $year,
+            'genres' => $genres
+        ]);
     }
 
     public function show($slug, Request $request)

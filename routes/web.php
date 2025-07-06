@@ -36,6 +36,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/games/{game}', [GameController::class, 'destroy'])->name('games.destroy');
 });
 
+// Ruta para la gestión de usuarios (solo para administradores)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user-management', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('user-management.index');
+    Route::get('/user-management/{user}/edit', [\App\Http\Controllers\UserManagementController::class, 'edit'])->name('user-management.edit');
+    Route::put('/user-management/{user}', [\App\Http\Controllers\UserManagementController::class, 'update'])->name('user-management.update');
+    Route::delete('/user-management/{user}', [\App\Http\Controllers\UserManagementController::class, 'destroy'])->name('user-management.destroy');
+});
+
+// Rutas para la foto de perfil
+Route::middleware(['auth'])->group(function () {
+    Route::post('/profile-photo', [\App\Http\Controllers\ProfilePhotoController::class, 'update'])->name('profile-photo.update');
+    Route::delete('/profile-photo', [\App\Http\Controllers\ProfilePhotoController::class, 'destroy'])->name('profile-photo.destroy');
+});
+
 Route::get('/test-mongo', [TestMongoController::class, 'index']);
 
 require __DIR__.'/auth.php';

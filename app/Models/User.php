@@ -19,6 +19,8 @@ class User extends Authenticatable implements CanResetPasswordContract
         'name',
         'email',
         'password',
+        'role',
+        'profile_photo'
     ];
 
     protected $hidden = [
@@ -29,4 +31,12 @@ class User extends Authenticatable implements CanResetPasswordContract
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo) {
+            return asset('storage/profile-photos/' . $this->profile_photo);
+        }
+        return asset('images/default-profile.png'); // Imagen por defecto
+    }
 }

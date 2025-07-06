@@ -16,28 +16,79 @@
 
     <!-- Search Form -->
     <div class="card-glass p-6 mb-8 max-w-2xl mx-auto">
-        <form method="GET" action="{{ route('rawg.search') }}" class="flex flex-col sm:flex-row gap-4">
-            <div class="flex-1 relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <form method="GET" action="{{ route('rawg.search') }}" class="space-y-6">
+            <!-- Search Input -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1 relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" 
+                           name="q"
+                           placeholder="Buscar juegos... (ej: The Witcher, GTA, Minecraft)"
+                           value="{{ request('q') }}"
+                           required
+                           class="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent search-glow transition-all"
+                    />
+                </div>
+                <button type="submit" class="btn-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 min-w-[120px]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                </div>
-                <input
-                    type="text"
-                    name="q"
-                    placeholder="Buscar juegos... (ej: The Witcher, GTA, Minecraft)"
-                    value="{{ request('q') }}"
-                    required
-                    class="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent search-glow transition-all"
-                />
+                    Buscar
+                </button>
             </div>
-            <button type="submit" class="btn-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 min-w-[120px]">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-                Buscar
-            </button>
+
+            <!-- Filters -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Metacritic Filter -->
+                <div>
+                    <label for="metacritic" class="block text-sm font-medium text-slate-300 mb-2">Calificación:</label>
+                    <select name="metacritic" id="metacritic" 
+                            class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            onchange="this.form.submit()">
+                        <option value="">Cualquier calificación</option>
+                        <option value="80,100" {{ request('metacritic') == '80,100' ? 'selected' : '' }}>80-100 (Excelente)</option>
+                        <option value="60,80" {{ request('metacritic') == '60,80' ? 'selected' : '' }}>60-80 (Buena)</option>
+                        <option value="40,60" {{ request('metacritic') == '40,60' ? 'selected' : '' }}>40-60 (Regular)</option>
+                        <option value="20,40" {{ request('metacritic') == '20,40' ? 'selected' : '' }}>20-40 (Baja)</option>
+                    </select>
+                </div>
+
+                <!-- Year Filter -->
+                <div>
+                    <label for="year" class="block text-sm font-medium text-slate-300 mb-2">Año:</label>
+                    <select name="year" id="year" 
+                            class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            onchange="this.form.submit()">
+                        <option value="">Cualquier año</option>
+                        @for($year = date('Y'); $year >= 1990; $year--)
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+
+                <!-- Genres Filter -->
+                <div>
+                    <label for="genres" class="block text-sm font-medium text-slate-300 mb-2">Género:</label>
+                    <select name="genres" id="genres" 
+                            class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            onchange="this.form.submit()">
+                        <option value="">Cualquier género</option>
+                        <option value="3" {{ request('genres') == '3' ? 'selected' : '' }}>Acción</option>
+                        <option value="4" {{ request('genres') == '4' ? 'selected' : '' }}>Aventura</option>
+                        <option value="5" {{ request('genres') == '5' ? 'selected' : '' }}>RPG</option>
+                        <option value="6" {{ request('genres') == '6' ? 'selected' : '' }}>Deportes</option>
+                        <option value="7" {{ request('genres') == '7' ? 'selected' : '' }}>Estrategia</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
         </form>
     </div>
 
