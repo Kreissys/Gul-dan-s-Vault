@@ -40,18 +40,32 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-slate-100">{{ $user->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-slate-100">{{ $user->email }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-slate-100">{{ $user->role ?? 'user' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full {{ $user->is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }}">
+                                    {{ $user->is_active ? 'Activo' : 'Desactivado' }}
+                                </span>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <form action="{{ route('user-management.update', $user) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PUT')
                                     <a href="{{ route('user-management.edit', $user) }}" class="text-indigo-400 hover:text-indigo-300 mr-4 transition-colors">Editar</a>
                                 </form>
-                                <form action="{{ route('user-management.destroy', $user) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-400 hover:text-red-300 transition-colors">Eliminar</button>
-                                </form>
+                                <a href="{{ route('user-management.game-stats', $user) }}" 
+                                   class="text-purple-400 hover:text-purple-300 mr-4 transition-colors">Estadísticas</a>
+                                @if($user->is_active)
+                                    <form action="{{ route('user-management.destroy', $user) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-400 hover:text-red-300 transition-colors">Desactivar</button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('user-management.activate', $user) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="text-green-400 hover:text-green-300 transition-colors">Activar</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

@@ -166,6 +166,24 @@
                                 </div>
                             </button>
 
+                            <!-- Mensaje sobre Google -->
+                            <div class="text-center text-gray-400 mt-4">
+                                <p>¿O prefieres forjar tu leyenda con Google?</p>
+                            </div>
+
+                            <!-- Google Register Button -->
+                            <div class="mt-4">
+                                <a href="{{ route('google.redirect') }}" class="w-full group relative overflow-hidden bg-gradient-to-r from-purple-500 via-blue-600 to-purple-700 hover:from-purple-600 hover:via-blue-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                                    <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300"></div>
+                                    <div class="relative flex items-center justify-center">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                        </svg>
+                                        FORJAR CON GOOGLE
+                                    </div>
+                                </a>
+                            </div>
+
                             <!-- Login Link -->
                             <div class="text-center pt-4 border-t border-gray-700/50">
                                 <span class="text-gray-400">¿Ya forjaste tu destino?</span>

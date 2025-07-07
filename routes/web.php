@@ -44,9 +44,11 @@ Route::middleware('auth')->group(function () {
 // Ruta para la gestión de usuarios (solo para administradores)
 Route::middleware(['auth'])->group(function () {
     Route::get('/user-management', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('user-management.index');
+    Route::get('/user-management/{user}/game-stats', [\App\Http\Controllers\UserGameStatsController::class, 'show'])->name('user-management.game-stats');
     Route::get('/user-management/{user}/edit', [\App\Http\Controllers\UserManagementController::class, 'edit'])->name('user-management.edit');
     Route::put('/user-management/{user}', [\App\Http\Controllers\UserManagementController::class, 'update'])->name('user-management.update');
     Route::delete('/user-management/{user}', [\App\Http\Controllers\UserManagementController::class, 'destroy'])->name('user-management.destroy');
+    Route::put('/user-management/{user}/activate', [\App\Http\Controllers\UserManagementController::class, 'activate'])->name('user-management.activate');
 });
 
 // Rutas para la foto de perfil

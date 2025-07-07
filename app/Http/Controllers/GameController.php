@@ -21,6 +21,11 @@ class GameController extends Controller
      */
     public function index()
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         $games = Game::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -42,6 +47,11 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         $request->validate([
             'rawg_id' => 'required|integer',
             'rawg_slug' => 'required|string',
@@ -107,6 +117,11 @@ class GameController extends Controller
      */
     public function update(Request $request, Game $game)
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         // Verificar que el juego pertenece al usuario autenticado
         if ($game->user_id !== Auth::id()) {
             abort(403);
@@ -134,6 +149,11 @@ class GameController extends Controller
      */
     public function destroy(Game $game)
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         // Verificar que el juego pertenece al usuario autenticado
         if ($game->user_id !== Auth::id()) {
             abort(403);

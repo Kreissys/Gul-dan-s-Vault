@@ -10,6 +10,11 @@ class UserManagementController extends Controller
 {
     public function index()
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return redirect()->back()->with('error', 'No tienes permisos para acceder a esta sección.');
         }
@@ -20,6 +25,11 @@ class UserManagementController extends Controller
 
     public function edit(User $user)
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return redirect()->back()->with('error', 'No tienes permisos para realizar esta acción.');
         }
@@ -29,6 +39,11 @@ class UserManagementController extends Controller
 
     public function update(Request $request, User $user)
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return redirect()->back()->with('error', 'No tienes permisos para realizar esta acción.');
         }
@@ -46,15 +61,45 @@ class UserManagementController extends Controller
 
     public function destroy(User $user)
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return redirect()->back()->with('error', 'No tienes permisos para realizar esta acción.');
         }
 
         if ($user->id === Auth::id()) {
-            return redirect()->back()->with('error', 'No puedes eliminar tu propio usuario.');
+            return redirect()->back()->with('error', 'No puedes desactivar tu propio usuario.');
         }
 
-        $user->delete();
-        return redirect()->back()->with('success', 'Usuario eliminado exitosamente.');
+        // Desactivar el usuario
+        $user->is_active = false;
+        $user->save();
+        
+        return redirect()->back()->with('success', 'Usuario desactivado exitosamente.');
+    }
+
+    public function activate(User $user)
+    {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'No tienes permisos para realizar esta acción.');
+        }
+
+        if ($user->id === Auth::id()) {
+            return redirect()->back()->with('error', 'No puedes activar tu propio usuario.');
+        }
+
+        // Activar el usuario
+        $user->is_active = true;
+        $user->save();
+        
+        return redirect()->back()->with('success', 'Usuario activado exitosamente.');
     }
 }

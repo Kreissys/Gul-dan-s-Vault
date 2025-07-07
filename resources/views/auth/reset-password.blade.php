@@ -54,44 +54,27 @@
                     </div>
                 </div>
 
-                <!-- Reset Panel -->
-                <div class="backdrop-blur-xl bg-gray-900/80 border border-blue-500/30 rounded-2xl shadow-2xl overflow-hidden">
-                    <!-- Panel Header -->
-                    <div class="bg-gradient-to-r from-blue-500/10 via-cyan-500/10 to-blue-600/10 p-6 border-b border-gray-700/50">
-                        <h2 class="text-xl font-bold text-white text-center">Restablecer Contraseña</h2>
-                        <p class="text-gray-400 text-center mt-1">Crea una nueva contraseña segura</p>
+                <!-- Validation Errors -->
+                @if ($errors->any())
+                    <div class="mb-4 text-sm font-medium text-red-400">
+                        {{ $errors->first() }}
                     </div>
+                @endif
 
-                    <!-- Form -->
-                    <div class="p-6 space-y-6">
-                        <form method="POST" action="{{ route('password.store') }}" class="space-y-6">
-                            @csrf
+                <form method="POST" action="{{ route('password.update') }}" class="bg-gray-800/50 rounded-lg p-8">
+                    @csrf
 
-                            <!-- Password Reset Token -->
-                            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                    <!-- Password Reset Token -->
+                    <input type="hidden" name="token" value="{{ $token }}">
 
-                            <!-- Email Field -->
-                            <div class="group">
-                                <label class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
-                                    <svg class="w-4 h-4 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
-                                    </svg>
-                                    Email
-                                </label>
-                                <div class="relative">
-                                    <input id="email" 
-                                           name="email" 
-                                           type="email" 
-                                           :value="old('email', $request->email)" 
-                                           required 
-                                           autofocus 
-                                           autocomplete="username"
-                                           placeholder="gamer@guldan.vault"
-                                           class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 group-hover:border-gray-500">
-                                    <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 via-cyan-500/0 to-blue-600/0 group-hover:from-blue-500/5 group-hover:via-cyan-500/5 group-hover:to-blue-600/5 transition-all duration-300 pointer-events-none"></div>
-                                </div>
-                                <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-400" />
-                            </div>
+                    <!-- Email Address -->
+                    <div class="mb-6">
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                            Email
+                        </label>
+                        <input type="email" name="email" id="email" 
+                               class="w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 text-gray-300 placeholder-gray-500 transition-colors"
+                               value="{{ old('email', $email) }}" required autofocus>
 
                             <!-- Password Field -->
                             <div class="group">

@@ -17,6 +17,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         $user = $request->user();
         
         // Obtener estadísticas del usuario
@@ -44,6 +49,11 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // Verificar si el usuario está desactivado
+        if (Auth::check() && !Auth::user()->is_active) {
+            return view('blocked');
+        }
+
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
